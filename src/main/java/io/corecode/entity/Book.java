@@ -19,6 +19,12 @@ public class Book {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "cover")
+    private String cover;
+
+    @Column(name = "picture")
+    private String picture;
+
     @Column(name = "writer_id")
     private Integer writerId;
 
@@ -109,11 +115,29 @@ public class Book {
         this.description = description;
     }
 
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
                 "bookId=" + bookId +
                 ", title='" + title + '\'' +
+                ", cover='" + cover + '\'' +
+                ", picture='" + picture + '\'' +
                 ", writerId=" + writerId +
                 ", publisherId=" + publisherId +
                 ", description='" + description + '\'' +
