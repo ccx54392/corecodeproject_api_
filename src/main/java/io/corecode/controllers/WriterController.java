@@ -4,7 +4,7 @@ package io.corecode.controllers;
 import io.corecode.entity.Book;
 import io.corecode.entity.Review;
 import io.corecode.entity.Writer;
-import io.corecode.repository.WriterRepository;
+import io.corecode.service.WriterService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/writer")
 public class WriterController {
+    private WriterService writerService;
 
     @Autowired
-    private WriterRepository writerRepository;
+    public void setWriterService(WriterService writerService) {
+        this.writerService=writerService;
+    }
 
     @GetMapping
     public List<Writer> list(){
-        List<Writer> list = writerRepository.findAll();
+        List<Writer> list = writerService.findAll();
         for(Writer s:list){
             List<Book> books = s.getBooks();
             for(Book t:books){
@@ -40,7 +43,7 @@ public class WriterController {
     @GetMapping
     @RequestMapping("{id}")
     public Writer get(@PathVariable Integer id){
-        Writer writer = writerRepository.getOne(id);
+        Writer writer = writerService.getOne(id);
         for(Book s:writer.getBooks()){
             s.setWriter(null);
             s.getPublisher().setBooks(null);
@@ -57,22 +60,22 @@ public class WriterController {
     @ResponseStatus(HttpStatus.CREATED)
     public Writer create(@RequestBody final Writer writer){
 
-        return writerRepository.saveAndFlush(writer);
+        return writerService.saveAndFlush(writer);
     }
 
     @RequestMapping(value="{id}", method=RequestMethod.DELETE)
     public void delete(@PathVariable Integer id){
         //cascade to remove children
-        writerRepository.deleteById(id);
+        writerService.deleteById(id);
     }
 
     @RequestMapping(value="{id}", method = RequestMethod.PUT)
     public Writer update(@PathVariable Integer id, @RequestBody Writer writer){
         //validate all values are passed in
         writer.setWriterId(id);
-        Writer existingWriter = writerRepository.getOne(id);
+        Writer existingWriter = writerService.getOne(id);
         BeanUtils.copyProperties(writer, existingWriter,"writer_id");
-        return writerRepository.saveAndFlush(existingWriter);
+        return writerService.saveAndFlush(existingWriter);
     }
 
 

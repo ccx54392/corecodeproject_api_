@@ -60,7 +60,18 @@ public class Writer {
         this.writerId = writerId;
     }
 
+    public Writer(){
 
+    }
+
+    public Writer(String name) {
+        this.name = name;
+    }
+
+    public Writer(Integer writerId, String name) {
+        this.writerId = writerId;
+        this.name = name;
+    }
 }
 
 

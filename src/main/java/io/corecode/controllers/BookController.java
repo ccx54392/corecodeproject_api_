@@ -84,6 +84,7 @@ public class BookController {
         Writer writer = writerRepository.getOne(book.getWriterId());
         writer.setBooks(null);
         book.setWriter(writer);
+
         Publisher publisher = publisherRepository.getOne(book.getPublisherId());
         publisher.setBooks(null);
         book.setPublisher(publisher);
@@ -91,6 +92,7 @@ public class BookController {
         book.setBookId(id);
         Book existingBook = bookRepository.getOne(id);
         BeanUtils.copyProperties(book, existingBook,"book_id");
+
         return bookRepository.saveAndFlush(existingBook);
     }
 
