@@ -1,10 +1,8 @@
 package io.corecode.controllers;
 
-import io.corecode.entity.Book;
 import io.corecode.entity.Review;
 import io.corecode.entity.User;
-import io.corecode.repository.ReviewRepository;
-import io.corecode.repository.UserRepository;
+import io.corecode.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +15,13 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping
-    public List<User> list(){
-        List<User> users = userRepository.findAll();
-        for(User s: users){
-            for(Review t: s.getReviews()){
+    public List<User> list() {
+        List<User> users = userService.findAll();
+        for (User s : users) {
+            for (Review t : s.getReviews()) {
                 t.setUser(null);
                 t.getBook().getPublisher().setBooks(null);
                 t.getBook().getWriter().setBooks(null);
@@ -35,9 +33,9 @@ public class UserController {
 
     @GetMapping
     @RequestMapping("{id}")
-    public User get(@PathVariable Integer id){
-        User user = userRepository.getOne(id);
-        for(Review t: user.getReviews()){
+    public User get(@PathVariable Integer id) {
+        User user = userService.getOne(id);
+        for (Review t : user.getReviews()) {
             t.setUser(null);
             t.getBook().getPublisher().setBooks(null);
             t.getBook().getWriter().setBooks(null);
@@ -48,23 +46,23 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody final User session){
-        return userRepository.saveAndFlush(session);
+    public User create(@RequestBody final User session) {
+        return userService.saveAndFlush(session);
     }
 
-    @RequestMapping(value="{id}", method=RequestMethod.DELETE)
-    public void delete(@PathVariable Integer id){
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable Integer id) {
         //cascade to remove children
-        userRepository.deleteById(id);
+        userService.deleteById(id);
     }
 
-    @RequestMapping(value="{id}", method = RequestMethod.PUT)
-    public User update(@PathVariable Integer id, @RequestBody User user){
+    @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+    public User update(@PathVariable Integer id, @RequestBody User user) {
         //validate all values are passed in
         user.setUserId(id);
-        User existingUser = userRepository.getOne(id);
-        BeanUtils.copyProperties(user, existingUser,"user_id");
-        return userRepository.saveAndFlush(existingUser);
+        User existingUser = userService.getOne(id);
+        BeanUtils.copyProperties(user, existingUser, "user_id");
+        return userService.saveAndFlush(existingUser);
     }
 
 
