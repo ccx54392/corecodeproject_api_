@@ -1,10 +1,10 @@
 package io.corecode.myapi.unitTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.corecode.controllers.WriterController;
-import io.corecode.entity.Book;
-import io.corecode.entity.Writer;
-import io.corecode.service.WriterService;
+import io.corecode.controllers.UserController;
+import io.corecode.entity.Review;
+import io.corecode.entity.User;
+import io.corecode.service.UserService;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,48 +22,48 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// mvn test -Dgroups=writer
+// mvn test -Dgroups=user
 
-@WebMvcTest(WriterController.class)
-@MockBean(WriterService.class)
-public class WriterTest extends AbstractTestNGSpringContextTests {
+@WebMvcTest(UserController.class)
+@MockBean(UserService.class)
+public class UserTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    WriterService service;
+    UserService service;
 
-    String path = "/writer/";
+    String path = "/user/";
 
-    @Test(groups = {"writer", "unitTest"})
+    @Test(groups = {"user", "unitTest"})
     public void getAll() throws Exception {
-        Writer entity = (Writer) this.getEntity();
-        Writer entity1 = (Writer) this.getEntity();
+        User entity = (User) this.getEntity();
+        User entity1 = (User) this.getEntity();
 
         Mockito.when(service.findAll()).thenReturn(Arrays.asList(entity, entity1));
 
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
         ;
-        System.out.println("[TEST PASSED] Get all writers");
+        System.out.println("[TEST PASSED] Get all users");
     }
 
-    @Test(groups = {"writer", "unitTest"})
+    @Test(groups = {"user", "unitTest"})
     public void getById() throws Exception {
-        Writer entity = (Writer) this.getEntity();
+        User entity = (User) this.getEntity();
 
         Mockito.when(service.getOne(1)).thenReturn(entity);
 
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
         ;
-        System.out.println("[TEST PASSED] Get writer by id");
+        System.out.println("[TEST PASSED] Get user by id");
     }
 
-    @Test(groups = {"writer", "unitTest"})
+    @Test(groups = {"user", "unitTest"})
     public void create() throws Exception {
-        Writer entity = (Writer) this.getEntity();
+        User entity = (User) this.getEntity();
 
         Mockito.when(service.saveAndFlush(entity)).thenReturn(entity);
 
@@ -73,21 +73,20 @@ public class WriterTest extends AbstractTestNGSpringContextTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
         ;
-        System.out.println("[TEST PASSED] Create writer");
+        System.out.println("[TEST PASSED] Create user");
     }
 
-    @Test(groups = {"writer", "unitTest"})
+    @Test(groups = {"user", "unitTest"})
     public void deleteById() throws Exception {
-        mockMvc.perform(delete(path
-                + "1"))
+        mockMvc.perform(delete(path + "1"))
                 .andExpect(status().isOk())
         ;
-        System.out.println("[TEST PASSED] Delete writer by id");
+        System.out.println("[TEST PASSED] Delete user by id");
     }
 
-    @Test(groups = {"writer", "unitTest"})
+    @Test(groups = {"user", "unitTest"})
     public void update() throws Exception {
-        Writer entity = (Writer) this.getEntity();
+        User entity = (User) this.getEntity();
 
         Mockito.when(service.getOne(1)).thenReturn(entity);
         Mockito.when(service.saveAndFlush(entity)).thenReturn(entity);
@@ -98,14 +97,16 @@ public class WriterTest extends AbstractTestNGSpringContextTests {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
         ;
-        System.out.println("[TEST PASSED] Update writer");
+        System.out.println("[TEST PASSED] Update user");
     }
 
     public Object getEntity() {
-        Writer entity = new Writer();
-        entity.setWriterId(1);
-        entity.setName("writer 1");
-        entity.setBooks(new ArrayList<Book>());
+        User entity = new User();
+        entity.setUserId(1);
+        entity.setUserName("user 1");
+        entity.setPassword("user 1");
+        entity.setRole("user");
+        entity.setReviews(new ArrayList<Review>());
         return entity;
     }
 
